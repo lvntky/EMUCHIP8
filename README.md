@@ -2,7 +2,7 @@
 
 <center>
 
-[KolGif](https://media.giphy.com/media/QMozgDyV3CutNj2cVs/giphy.gif)
+![KolGif](https://media.giphy.com/media/QMozgDyV3CutNj2cVs/giphy.gif)
 
 </center>
 
