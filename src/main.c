@@ -1,6 +1,6 @@
 #include <stdio.h>
-#include "D:\GitHub\EMUCHIP8\include\SDL2\SDL.h"
-#include "D:\GitHub\EMUCHIP8\include\chip8.h"
+#include "D:\GitHub\EMUCHIP8\include\SDL2\SDL.h" //SDL.h
+#include "D:\GitHub\EMUCHIP8\include\chip8.h" //chip8.h
 
 int main(int argc, char** argv)
 {   

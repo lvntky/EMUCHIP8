@@ -5,7 +5,8 @@
             "includePath": [
                 "C:\\MinGW\\lib\\gcc\\mingw32\\6.3.0",
                 "${workspaceFolder}",
-                "D:\\GitHub\\EMUCHIP8\\include\\SDL2"
+                "D:\\GitHub\\EMUCHIP8\\include\\SDL2",
+                "D:\\GitHub\\EMUCHIP8\\include"
             ],
             "defines": [
                 "_DEBUG",

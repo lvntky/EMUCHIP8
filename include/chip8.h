@@ -2,9 +2,10 @@
 #define CHIP8_H
 
 #include "config.h"
+#include "chip8memory.h"
 struct chip8
 {
-    /* data */
+    struct chip8_memory memory;
 };
 
 
