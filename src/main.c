@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdbool.h>
+#include <windows.h>
 #include "D:\GitHub\EMUCHIP8\include\SDL2\SDL.h" //SDL.h
 #include "D:\GitHub\EMUCHIP8\include\chip8.h" //chip8.h
 #include "D:\GitHub\EMUCHIP8\include\chip8keyboard.h" //chip8keyboard.h
@@ -18,8 +19,9 @@ int main(int argc, char** argv)
 {   
     struct chip8 chip8; //creating a chip8 struct variable
     chip8_init(&chip8);    
+    chip8.registers.delay_timer = 255;
 
-   chip8_screen_draw_sprite(&chip8.screen, 32, 16, &chip8.memory.memory[0x00], 5);
+    chip8_screen_draw_sprite(&chip8.screen, 32, 16, &chip8.memory.memory[0x00], 5);
         
     SDL_Init(SDL_INIT_EVERYTHING); 
     SDL_Window* window = SDL_CreateWindow(
@@ -72,7 +74,11 @@ int main(int argc, char** argv)
                     r.h = CHIP8_WINDOW_MULTIPLIER;
                     r.w = CHIP8_WINDOW_MULTIPLIER;
                     SDL_RenderFillRect(renderer, &r);
-                    
+                    if(chip8.registers.delay_timer > 0){
+                        Sleep(100);
+                        chip8.registers.delay_timer -= 1;
+                        printf("Delay!!");
+                    }                    
                 }
             }
             
