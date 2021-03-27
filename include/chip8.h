@@ -19,4 +19,5 @@ struct chip8
 
 void chip8_init(struct chip8* chip8);
 
+
 #endif
