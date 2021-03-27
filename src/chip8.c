@@ -1,5 +1,6 @@
 #include "D:\GitHub\EMUCHIP8\include\chip8.h" //chip8.h
 #include <memory.h>
+#include <assert.h>
 
 const char chip8_default_character_set[] = {
     0XF0, 0X90, 0X90, 0X90, 0XF0, //0
@@ -24,4 +25,15 @@ void chip8_init(struct chip8* chip8)
 {
     memset(chip8, 0, sizeof(struct chip8));
     memcpy(&chip8->memory, chip8_default_character_set, sizeof(chip8_default_character_set));
+}
+
+void chip8_load(struct chip8* chip8, const char* buf, size_t size)
+{
+    assert(size + CHIP8_PROGRAM_LOAD_ADRESS < CHIP8_MEMORY_SIZE);
+    memcpy(&chip8->memory.memory[CHIP8_PROGRAM_LOAD_ADRESS], buf, size);
+    chip8->registers.PC = CHIP8_PROGRAM_LOAD_ADRESS;
+}
+void chip8_exec(struct chip8* chip8, unsigned short opcode)
+{
+
 }

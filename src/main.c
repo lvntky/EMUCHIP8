@@ -16,9 +16,35 @@ const char keyboard_map[CHIP8_TOTAL_KEYS] =
 
 int main(int argc, char **argv)
 {
+    if(argc < 2){
+        printf("You must provide a file to load!\n");
+        return -1;
+    }
+
+    const char* filename = argv[1];
+    printf("The file name to load is: %s\n", filename);
+
+    FILE* f = fopen(filename, "rb");
+    if(!f){
+        printf("Failed to open this file...\n");
+        return -1;
+    }
+
+    fseek(f, 0, SEEK_END);
+    long size = ftell(f);
+    fseek(f, 0, SEEK_SET);
+
+    char buf[size];
+    int res = fread(buf, size, 1, f);
+
+    if(res != 1){
+        printf("Failed to read from file...\n");
+        return -1;
+    }
+
     struct chip8 chip8; //creating a chip8 struct variable
     chip8_init(&chip8);
-    chip8.registers.sound_timer = 30;
+    chip8_load(&chip8, buf, size);
 
     chip8_screen_draw_sprite(&chip8.screen, 32, 16, &chip8.memory.memory[0x00], 5);
 
@@ -94,6 +120,11 @@ int main(int argc, char **argv)
             Beep(8000, 100 * chip8.registers.sound_timer);
             chip8.registers.sound_timer = 0;
         }
+
+        unsigned short opcode = chip8_memory_get(&chip8.memory, chip8.registers.PC);
+        chip8_exec(&chip8, opcode);
+        chip8.registers.PC += 2;
+        printf("%x\n", opcode);
     }
 
 out:
