@@ -4,6 +4,7 @@
 #include <stdbool.h>
 #include <stdlib.h>
 #include <time.h>
+#include "D:\GitHub\EMUCHIP8\include\SDL2\SDL.h"      //SDL.h
 
 const char chip8_default_character_set[] = {
     0XF0, 0X90, 0X90, 0X90, 0XF0, //0
@@ -106,6 +107,83 @@ static void chip8_exec_extended_eight(struct chip8* chip8, unsigned short opcode
         break;
     }
 }
+
+static char chip8_wait_for_key_press(struct chip8* chip8)
+{
+    SDL_Event event;
+    while(SDL_WaitEvent(&event)){
+        if(event.type != SDL_KEYDOWN){
+            continue;
+        }
+        char c = event.key.keysym.sym;
+        char chip8_key = chip8_keyboard_map(&chip8->keyboard, c);
+        if(chip8_key != -1){
+            return chip8_key;
+        }
+    }
+
+    return -1;       
+}
+static void chip8_exec_extended_F(struct chip8* chip8, unsigned short opcode)
+{
+    unsigned char x = (opcode >> 8) & 0x000f;
+    switch (opcode & 0x00ff)
+    {
+        case 0x07:
+            chip8->registers.V[x] = chip8->registers.delay_timer;
+        break;
+
+        case 0x0A:
+        {
+            char pressed_key = chip8_wait_for_key_press(chip8);
+            chip8->registers.V[x] = pressed_key;
+        }
+        break;
+
+        case 0x15:
+            chip8->registers.delay_timer = chip8->registers.V[x];
+        break;
+
+        case 0x18:
+            chip8->registers.sound_timer = chip8->registers.V[x];
+        break;
+
+        case 0x1e:
+            chip8->registers.I += chip8->registers.V[x];
+        break;
+
+        case 0x29:
+            chip8->registers.I = chip8->registers.V[x] * CHIP8_DEFAULT_SPRITE_SIZE;
+        break;
+
+        case 0x33:
+        {
+            unsigned char hundereds = chip8->registers.V[x] / 100;
+            unsigned char tens = chip8->registers.V[x] / 10 % 10;
+            unsigned char units = chip8->registers.V[x] % 10;
+            chip8_memory_set(&chip8->memory, chip8->registers.I, hundereds);
+            chip8_memory_set(&chip8->memory, chip8->registers.I + 1, tens);
+            chip8_memory_set(&chip8->memory, chip8->registers.I + 2, units);
+        }
+        break;
+
+        case 0x55:
+        {
+            for(int i = 0; i <= x; i++){
+                chip8_memory_set(&chip8->memory, chip8->registers.I + i, chip8->registers.V[i]);
+            }
+        }
+        break;
+
+        case 0x65:
+        {
+            for(int i = 0; i <= x; i++){
+                chip8->registers.V[i] = chip8_memory_get(&chip8->memory, chip8->registers.I + i);
+            }
+        }
+        break;
+    }
+}
 static void chip8_exec_extended(struct chip8* chip8, unsigned short opcode)
 {
     unsigned short nnn = opcode & 0x0fff;
@@ -190,8 +268,28 @@ static void chip8_exec_extended(struct chip8* chip8, unsigned short opcode)
         break;
 
         case 0xE000:
-            
-        break; 
+        {
+            switch (opcode)
+            {
+                case 0x9e:
+                    if(chip8_keyboard_is_down(&chip8->keyboard, chip8->registers.V[x])){
+                        chip8->registers.PC += 2;
+                    }
+                break;
+
+                case 0xa1:
+                    if(!chip8_keyboard_is_down(&chip8->keyboard, chip8->registers.V[x])){
+                        chip8->registers.PC += 2;
+                    }
+                break;
+            }
+        }
+
+        break;
+
+        case 0xF000:
+            chip8_exec_extended_F(chip8, opcode);
+        break;
     }
 }
 
