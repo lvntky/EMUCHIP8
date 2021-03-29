@@ -9,3 +9,5 @@ bin/main.exe
 *.exe
 *.exe
 bin/INVADERS
+bin/MISSILE
+bin/PONG
