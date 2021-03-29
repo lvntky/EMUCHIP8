@@ -7,26 +7,27 @@
 
 //Global Variables
 
-const char keyboard_map[CHIP8_TOTAL_KEYS] =
-    {
-        SDLK_0, SDLK_1, SDLK_2, SDLK_3,
-        SDLK_4, SDLK_5, SDLK_6, SDLK_7,
-        SDLK_8, SDLK_9, SDLK_a, SDLK_b,
-        SDLK_c, SDLK_d, SDLK_e, SDLK_f};
+const char keyboard_map[CHIP8_TOTAL_KEYS] = {
+    SDLK_0, SDLK_1, SDLK_2, SDLK_3, SDLK_4, SDLK_5,
+    SDLK_6, SDLK_7, SDLK_8, SDLK_9, SDLK_a, SDLK_b,
+    SDLK_c, SDLK_d, SDLK_e, SDLK_f};
 
 int main(int argc, char **argv)
 {
-    if(argc < 2){
-        printf("You must provide a file to load!\n");
+
+    if (argc < 2)
+    {
+        printf("You must provide a file to load\n");
         return -1;
     }
 
     const char* filename = argv[1];
-    printf("The file name to load is: %s\n", filename);
+    printf("The filename to load is: %s\n", filename);
 
     FILE* f = fopen(filename, "rb");
-    if(!f){
-        printf("Failed to open this file...\n");
+    if (!f)
+    {
+        printf("Failed to open the file");
         return -1;
     }
 
@@ -36,16 +37,17 @@ int main(int argc, char **argv)
 
     char buf[size];
     int res = fread(buf, size, 1, f);
-
-    if(res != 1){
-        printf("Failed to read from file...\n");
+    if (res != 1)
+    {
+        printf("Failed to read from file");
         return -1;
     }
-
-    struct chip8 chip8; //creating a chip8 struct variable
+    
+    struct chip8 chip8;
     chip8_init(&chip8);
     chip8_load(&chip8, buf, size);
     chip8_keyboard_set_map(&chip8.keyboard, keyboard_map);
+   
 
     SDL_Init(SDL_INIT_EVERYTHING);
     SDL_Window *window = SDL_CreateWindow(
@@ -56,6 +58,7 @@ int main(int argc, char **argv)
         CHIP8_HEIGHT * CHIP8_WINDOW_MULTIPLIER, SDL_WINDOW_SHOWN);
 
     SDL_Renderer *renderer = SDL_CreateRenderer(window, -1, SDL_TEXTUREACCESS_TARGET);
+
     while (1)
     {
         SDL_Event event;
@@ -88,7 +91,7 @@ int main(int argc, char **argv)
                 }
             }
             break;
-            }
+            };
         }
 
         SDL_SetRenderDrawColor(renderer, 0, 0, 0, 0);
@@ -104,23 +107,27 @@ int main(int argc, char **argv)
                     SDL_Rect r;
                     r.x = x * CHIP8_WINDOW_MULTIPLIER;
                     r.y = y * CHIP8_WINDOW_MULTIPLIER;
-                    r.h = CHIP8_WINDOW_MULTIPLIER;
                     r.w = CHIP8_WINDOW_MULTIPLIER;
+                    r.h = CHIP8_WINDOW_MULTIPLIER;
                     SDL_RenderFillRect(renderer, &r);
                 }
             }
         }
+
         SDL_RenderPresent(renderer);
-        if(chip8.registers.delay_timer > 0){
-            Sleep(100);
-            printf("Delay!\n");
-        }
-        if(chip8.registers.sound_timer > 0){
-            Beep(8000, 100 * chip8.registers.sound_timer);
-            chip8.registers.sound_timer = 0;
+        if (chip8.registers.delay_timer > 0)
+        {
+            Sleep(1);
+            chip8.registers.delay_timer -=1;
         }
 
-        unsigned short opcode = chip8_memory_get(&chip8.memory, chip8.registers.PC);
+        if (chip8.registers.sound_timer > 0)
+        {
+            Beep(15000, 10 * chip8.registers.sound_timer);
+            chip8.registers.sound_timer = 0;
+        }
+        
+        unsigned short opcode = chip8_memory_get_short(&chip8.memory, chip8.registers.PC);
         chip8.registers.PC += 2;
         chip8_exec(&chip8, opcode);
     }
