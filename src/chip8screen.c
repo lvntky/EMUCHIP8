@@ -1,9 +1,15 @@
 #include "D:\GitHub\EMUCHIP8\include\chip8screen.h" //chip8screen.h
 #include <assert.h>
+#include <memory.h>
 
 static void chip8_screen_check_bounds(int x, int y)
 {
     assert(x >= 0 && x < CHIP8_WIDTH && y >= 0 && y < CHIP8_HEIGHT);
+}
+
+void chip8_screen_clear(struct chip8_screen* screen)
+{
+    memset(screen->pixels, 0, sizeof(screen->pixels));
 }
 
 void chip8_screen_set(struct chip8_screen* screen, int x, int y)

@@ -6,7 +6,7 @@
 // So we cant overflow in our stack
 static void chip8_stack_in_bounds(struct chip8* chip8)
 {
-    assert(chip8->registers.SP < CHIP8_TOTAL_STACK_DEPTH);
+    assert(chip8->registers.SP < sizeof(chip8->stack.stack)); 
 }
 
 void chip8_stack_push(struct chip8* chip8, unsigned short val)
