@@ -11,3 +11,4 @@ bin/main.exe
 bin/INVADERS
 bin/MISSILE
 bin/PONG
+*.exe
