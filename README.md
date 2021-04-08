@@ -7,7 +7,8 @@
 </center>
 
 ## Chip-8 Demo Video
-[![CHip8 Demo Video](https://img.youtube.com/vi/o8QAmDgwz1I/0.jpg)](https://www.youtube.com/watch?v=o8QAmDgwz1I)
+[![CHip8 Demo Video](https://img.youtube.com/vi/o8QAmDgwz1I/100.jpg)](https://www.youtube.com/watch?v=o8QAmDgwz1I)
+
 
 This is a fun retro emulator project of mine. You can download the source code and build with MAKE, then insert your chip-8 games(Rom Files) and have a good time.
 
