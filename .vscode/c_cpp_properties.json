@@ -1,0 +1,23 @@
+{
+    "configurations": [
+        {
+            "name": "Win32",
+            "includePath": [
+                "C:\\MinGW\\lib\\gcc\\mingw32\\6.3.0",
+                "${workspaceFolder}",
+                "D:\\GitHub\\EMUCHIP8\\include\\SDL2",
+                "D:\\GitHub\\EMUCHIP8\\include"
+            ],
+            "defines": [
+                "_DEBUG",
+                "UNICODE",
+                "_UNICODE"
+            ],
+            "compilerPath": "C:\\MinGW\\bin\\gcc.exe",
+            "cStandard": "c17",
+            "cppStandard": "c++17",
+            "intelliSenseMode": "windows-msvc-x64"
+        }
+    ],
+    "version": 4
+}
